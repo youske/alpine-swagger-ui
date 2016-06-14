@@ -1,0 +1,16 @@
+version: "2"
+services:
+
+  uiserver:
+    build: build
+    ulimits:
+      nproc: 65535
+      nofile:
+        soft: 20000
+        hard: 40000
+    ports:
+      - "38080:8080"
+
+volumes:
+  data:
+    driver: local

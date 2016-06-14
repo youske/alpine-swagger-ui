@@ -1,0 +1,32 @@
+daemon off;
+#user www-data;
+worker_processes 1;
+worker_rlimit_nofile {{ var "WORKER_RLIMIT_NOFILE" | default "8192" }};
+
+events {
+  use epoll;
+  worker_connections {{ var "WORKER_CONNECTION" | default "512" }};
+  multi_accept on;
+}
+
+http {
+  include mime.types;
+  default_type application/octet-stream;
+
+  sendfile on;
+  keepalive_timeout 30;
+  tcp_nopush on;
+  tcp_nodelay on;
+  gzip on;
+  gzip_disable "MSIE [1-6]\.(?!.*SV1)";
+
+  server {
+    listen  {{ var "PORT" | default "8080" }} default;
+    index index.html index.htm;
+    charset {{ var "CHARSET" | default "en_us.UTF-8" }} ;
+    location / {
+      root /usr/share/nginx/html;
+    }
+  }
+
+}
